@@ -1,56 +1,127 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Add Product</title>
+    <title>Add Product - MainMarket</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .page-hero {
+            background: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .form-card {
+            border: none;
+            border-radius: 14px;
+        }
+
+        .form-label {
+            font-weight: 600;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        .btn {
+            border-radius: 10px;
+        }
+    </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-<div class="container mt-5">
-    <h2>Add Product</h2>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <form th:action="@{/products}" th:object="${product}" method="post">
+<main class="flex-grow-1">
 
-        <div class="mb-3">
-            <label class="form-label">Name</label>
-            <input th:field="*{name}" class="form-control">
-            <div class="text-danger" th:errors="*{name}"></div>
+    <section class="page-hero py-5 mb-4">
+        <div class="container">
+            <h1 class="fw-bold mb-2">Add Product</h1>
+            <p class="text-muted mb-0">
+                Create a new product listing by filling out the form below.
+            </p>
         </div>
+    </section>
 
-        <div class="mb-3">
-            <label class="form-label">Description</label>
-            <textarea th:field="*{description}" class="form-control"></textarea>
+    <div class="container pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="card shadow-sm form-card">
+                    <div class="card-body p-4 p-md-5">
+
+                        <h4 class="mb-4">Product Details</h4>
+
+                        <form th:action="@{/products}" th:object="${product}" method="post">
+
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input th:field="*{name}" class="form-control" placeholder="Enter product name">
+                                <div class="text-danger small mt-1" th:errors="*{name}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea th:field="*{description}" class="form-control" placeholder="Enter product description"></textarea>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Price</label>
+                                    <input th:field="*{price}" type="number" step="0.01" class="form-control" placeholder="0.00">
+                                    <div class="text-danger small mt-1" th:errors="*{price}"></div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Stock Quantity</label>
+                                    <input th:field="*{stockQuantity}" type="number" class="form-control" placeholder="Enter stock quantity">
+                                    <div class="text-danger small mt-1" th:errors="*{stockQuantity}"></div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mt-1">
+                                <div class="col-md-6">
+                                    <label class="form-label">Category</label>
+                                    <select th:field="*{category}" class="form-select">
+                                        <option value="">Select a category</option>
+                                        <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat.name}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="form-label">Brand</label>
+                                    <select th:field="*{brand}" class="form-select">
+                                        <option value="">Select a brand</option>
+                                        <option th:each="b : ${brands}" th:value="${b}" th:text="${b.name}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 mt-4">
+                                <button class="btn btn-success px-4">Save Product</button>
+                                <a href="/products" class="btn btn-outline-secondary px-4">Cancel</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
+    </div>
 
-        <div class="mb-3">
-            <label class="form-label">Price</label>
-            <input th:field="*{price}" type="number" step="0.01" class="form-control">
-            <div class="text-danger" th:errors="*{price}"></div>
-        </div>
+</main>
 
-        <div class="mb-3">
-            <label class="form-label">Stock Quantity</label>
-            <input th:field="*{stockQuantity}" type="number" class="form-control">
-            <div class="text-danger" th:errors="*{stockQuantity}"></div>
-        </div>
+<div th:replace="fragments/footer :: footer"></div>
 
-        <div class="mb-3">
-            <label class="form-label">Category</label>
-            <select th:field="*{category}" class="form-select">
-                <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat.name}"></option>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Brand</label>
-            <select th:field="*{brand}" class="form-select">
-                <option th:each="b : ${brands}" th:value="${b}" th:text="${b.name}"></option>
-            </select>
-        </div>
-
-        <button class="btn btn-success">Save Product</button>
-    </form>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

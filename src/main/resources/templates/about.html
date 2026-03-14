@@ -1,19 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>About - Main Market</title>
+    <title>About - MainMarket</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .page-hero {
+            background: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .about-card {
+            border: none;
+            border-radius: 14px;
+        }
+    </style>
 </head>
-<body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand ms-3" href="/">Main Market</a>
-</nav>
+<body class="d-flex flex-column min-vh-100">
 
-<div class="container mt-5">
-    <h2>About Main Market</h2>
-    <p>This is a demo e-commerce platform built for CPAN-228 Deliverable 1.</p>
-</div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<main class="flex-grow-1">
+
+    <!-- Page Header -->
+    <section class="page-hero py-5 mb-4">
+        <div class="container">
+            <h1 class="fw-bold mb-2">About MainMarket</h1>
+            <p class="text-muted mb-0">
+                Learn more about this demo marketplace application.
+            </p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <div class="container pb-5">
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <div class="card shadow-sm about-card">
+                    <div class="card-body p-4 p-md-5">
+
+                        <h4 class="mb-3">Project Overview</h4>
+
+                        <p class="text-muted">
+                            MainMarket is a demo e-commerce platform built as part of the
+                            <strong>CPAN 228 Web Application Development</strong> course.
+                            The project demonstrates how modern web applications are built
+                            using Spring Boot, Thymeleaf, and Bootstrap.
+                        </p>
+
+                        <p class="text-muted">
+                            Users can browse product listings, add new products through a
+                            form interface, and explore marketplace data stored in a
+                            relational database.
+                        </p>
+
+                        <hr class="my-4">
+
+                        <h5 class="mb-3">Technologies Used</h5>
+
+                        <ul class="text-muted">
+                            <li>Spring Boot</li>
+                            <li>Thymeleaf Templates</li>
+                            <li>Bootstrap 5</li>
+                            <li>Java & JPA</li>
+                        </ul>
+
+                        <hr class="my-4">
+
+                        <p class="text-muted mb-0">
+                            This project demonstrates a basic microservice-based
+                            marketplace system with a focus on clean UI design,
+                            data management, and responsive web development.
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</main>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
