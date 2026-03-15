@@ -1,59 +1,182 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Products</title>
+    <title>Products - MainMarket</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .page-hero {
+            background: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .filter-card,
+        .products-card {
+            border: none;
+            border-radius: 14px;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 0.5em 0.75em;
+            border-radius: 999px;
+        }
+
+        .btn-sm {
+            border-radius: 8px;
+        }
+    </style>
 </head>
-<body>
 
-<div class="container mt-4">
+<body class="d-flex flex-column min-vh-100">
 
-    <h2>Products</h2>
+<div th:replace="fragments/navbar :: navbar"></div>
 
-    <a href="/products/new" class="btn btn-primary mb-3">Add Product</a>
+<main class="flex-grow-1">
 
-    <form method="get" class="row g-3 mb-4">
+    <!-- Page Header -->
+    <section class="page-hero py-5 mb-4">
+        <div class="container">
+            <h1 class="fw-bold mb-2">Products</h1>
+            <p class="text-muted mb-0">
+                Browse available items, explore listings, and manage marketplace products.
+            </p>
+        </div>
+    </section>
 
-        <div class="col-md-4">
-            <label>Category</label>
-            <select name="categoryId" class="form-select">
-                <option value="">All</option>
-                <option th:each="cat : ${categories}"
-                        th:value="${cat.categoryId}"
-                        th:selected="${selectedCategoryId == cat.categoryId}"
-                        th:text="${cat.name}">
-                </option>
-            </select>
+    <div class="container pb-5">
+
+        <!-- Search / Filter Card -->
+        <div class="card shadow-sm filter-card mb-4">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">Search and Filter</h5>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Search</label>
+                        <input type="text" class="form-control" placeholder="Search products...">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Category</label>
+                        <select class="form-select">
+                            <option selected>All Categories</option>
+                            <option>Electronics</option>
+                            <option>Clothing</option>
+                            <option>Home</option>
+                            <option>Beauty</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Sort By</label>
+                        <select class="form-select">
+                            <option selected>Name</option>
+                            <option>Price</option>
+                            <option>Newest</option>
+                            <option>Oldest</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-primary w-100">Apply</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-4">
-            <label>Brand</label>
-            <select name="brandId" class="form-select">
-                <option value="">All</option>
-                <option th:each="b : ${brands}"
-                        th:value="${b.brandId}"
-                        th:selected="${selectedBrandId == b.brandId}"
-                        th:text="${b.name}">
-                </option>
-            </select>
+        <!-- Product List Card -->
+        <div class="card shadow-sm products-card">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="card-title mb-0">Product Listings</h5>
+                    <span class="text-muted">Showing 3 products</span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Year</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Wireless Headphones</td>
+                                <td>
+                                    <span class="badge text-bg-primary">Electronics</span>
+                                </td>
+                                <td>$199</td>
+                                <td>2025</td>
+                                <td>
+                                    <span class="badge text-bg-success">Available</span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Modern Lamp</td>
+                                <td>
+                                    <span class="badge text-bg-secondary">Home</span>
+                                </td>
+                                <td>$49</td>
+                                <td>2024</td>
+                                <td>
+                                    <span class="badge text-bg-success">Available</span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Winter Jacket</td>
+                                <td>
+                                    <span class="badge text-bg-dark">Clothing</span>
+                                </td>
+                                <td>$120</td>
+                                <td>2025</td>
+                                <td>
+                                    <span class="badge text-bg-warning">Low Stock</span>
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+               
+
+            </div>
         </div>
 
-        <div class="col-md-2">
-            <label>Sort By</label>
-            <select name="sortBy" class="form-select">
-                <option value="name">Name</option>
-                <option value="price">Price</option>
-                <option value="createdAt">Created Date</option>
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <label>Direction</label>
-            <select name="direction" class="form-select">
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-            </select>
-        </div>
+    </div>
+</main>
 
         <div class="col-12">
             <button class="btn btn-secondary">Apply Filters</button>
@@ -113,6 +236,8 @@
     </nav>
 
 </div>
+<div th:replace="fragments/footer :: footer"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
