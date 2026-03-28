@@ -43,8 +43,12 @@
 
     <section class="page-hero py-5 mb-4">
         <div class="container">
-            <h1 class="fw-bold mb-2">Add Product</h1>
-            <p class="text-muted mb-0">
+            <h1 class="fw-bold mb-2"
+                th:text="${product.productId} != null ? 'Edit Product' : 'Add Product'">
+                Add Product
+            </h1>
+            <p class="text-muted mb-0"
+               th:text="${product.productId} != null ? 'Update the product details below.' : 'Create a new product listing by filling out the form below.'">
                 Create a new product listing by filling out the form below.
             </p>
         </div>
@@ -57,9 +61,14 @@
                 <div class="card shadow-sm form-card">
                     <div class="card-body p-4 p-md-5">
 
-                        <h4 class="mb-4">Product Details</h4>
+                        <h4 class="mb-4"
+                            th:text="${product.productId} != null ? 'Edit Product Details' : 'Product Details'">
+                            Product Details
+                        </h4>
 
-                        <form th:action="@{/products}" th:object="${product}" method="post">
+                        <form th:action="${product.productId} != null ? @{/products/{id}(id=${product.productId})} : @{/products}"
+                              th:object="${product}"
+                              method="post">
 
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
@@ -105,7 +114,10 @@
                             </div>
 
                             <div class="d-flex gap-2 mt-4">
-                                <button class="btn btn-success px-4">Save Product</button>
+                                <button class="btn btn-success px-4"
+                                        th:text="${product.productId} != null ? 'Update Product' : 'Save Product'">
+                                    Save Product
+                                </button>
                                 <a href="/products" class="btn btn-outline-secondary px-4">Cancel</a>
                             </div>
 

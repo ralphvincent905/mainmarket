@@ -1,9 +1,15 @@
 package ca.humber.cpan228.mainmarket.controller;
 
 import ca.humber.cpan228.mainmarket.entity.Product;
-import ca.humber.cpan228.mainmarket.repository.*;
+import ca.humber.cpan228.mainmarket.repository.BrandRepository;
+import ca.humber.cpan228.mainmarket.repository.CategoryRepository;
+import ca.humber.cpan228.mainmarket.repository.ProductRepository;
 import jakarta.validation.Valid;
-import org.springframework.data.domain.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,28 +18,19 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final BrandRepository brandRepository;
 
-    public ProductController(ProductRepository productRepository,
-                             CategoryRepository categoryRepository,
-                             BrandRepository brandRepository) {
-        this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
-        this.brandRepository = brandRepository;
-    }
-
     @GetMapping
     public String listProducts(
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long brandId,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String direction,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "6") int size,
+            @RequestParam(defaultValue = "productId") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
             Model model) {
 
         Sort sort = direction.equalsIgnoreCase("desc")
@@ -41,26 +38,12 @@ public class ProductController {
                 : Sort.by(sortBy).ascending();
 
         Pageable pageable = PageRequest.of(page, size, sort);
-        Page<Product> productPage;
-
-        if (categoryId != null && brandId != null) {
-            productPage = productRepository
-                    .findByCategory_CategoryIdAndBrand_BrandId(categoryId, brandId, pageable);
-        } else if (categoryId != null) {
-            productPage = productRepository
-                    .findByCategory_CategoryId(categoryId, pageable);
-        } else if (brandId != null) {
-            productPage = productRepository
-                    .findByBrand_BrandId(brandId, pageable);
-        } else {
-            productPage = productRepository.findAll(pageable);
-        }
+        Page<Product> productPage = productRepository.findAll(pageable);
 
         model.addAttribute("productPage", productPage);
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("brands", brandRepository.findAll());
-        model.addAttribute("selectedCategoryId", categoryId);
-        model.addAttribute("selectedBrandId", brandId);
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", productPage.getTotalPages());
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("direction", direction);
 
@@ -91,5 +74,58 @@ public class ProductController {
 
         productRepository.save(product);
         return "redirect:/products";
+    }
+
+    @GetMapping("/{id}/edit")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
+
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("brands", brandRepository.findAll());
+        return "product-form";
+    }
+
+    @PostMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
+    public String updateProduct(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("product") Product product,
+            BindingResult bindingResult,
+            Model model) {
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("categories", categoryRepository.findAll());
+            model.addAttribute("brands", brandRepository.findAll());
+            return "product-form";
+        }
+
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid product id: " + id));
+
+        existingProduct.setName(product.getName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setStockQuantity(product.getStockQuantity());
+        existingProduct.setWeight(product.getWeight());
+        existingProduct.setDimensions(product.getDimensions());
+        existingProduct.setColor(product.getColor());
+        existingProduct.setSize(product.getSize());
+        existingProduct.setIsAvailable(product.getIsAvailable());
+        existingProduct.setIsFeatured(product.getIsFeatured());
+        existingProduct.setCategory(product.getCategory());
+        existingProduct.setBrand(product.getBrand());
+
+        productRepository.save(existingProduct);
+        return "redirect:/admin/dashboard";
+    }
+
+    @PostMapping("/{id}/delete")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteProduct(@PathVariable Long id) {
+        productRepository.deleteById(id);
+        return "redirect:/admin/dashboard";
     }
 }

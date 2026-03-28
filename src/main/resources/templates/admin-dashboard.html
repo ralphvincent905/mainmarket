@@ -192,6 +192,55 @@
             </tbody>
         </table>
     </div>
+
+    <div class="users-section" style="margin-top:30px;">
+        <h2>Product Management</h2>
+
+        <div style="margin-bottom:15px;">
+            <a th:href="@{/products/new}" class="btn btn-success">Add Product</a>
+        </div>
+
+        <table class="users-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th style="width: 180px;">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="product : ${products}">
+                <td th:text="${product.productId}">1</td>
+                <td th:text="${product.name}">Name</td>
+                <td th:text="${product.category.name}">Category</td>
+                <td th:text="${product.brand.name}">Brand</td>
+                <td th:text="${product.price}">0.00</td>
+                <td th:text="${product.stockQuantity}">0</td>
+
+                <td>
+                    <a th:href="@{/products/{id}/edit(id=${product.productId})}"
+                       class="btn btn-sm btn-primary">
+                        Edit
+                    </a>
+
+                    <form th:action="@{/products/{id}/delete(id=${product.productId})}"
+                          method="post"
+                          style="display:inline-block;"
+                          onsubmit="return confirm('Delete this product?');">
+                        <button type="submit" class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div th:insert="fragments/footer :: footer"></div>
