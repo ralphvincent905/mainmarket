@@ -20,4 +20,6 @@ public class HomeController {
     public String products() {
         return "redirect:/products";
     }
+
 }
+
