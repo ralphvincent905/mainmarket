@@ -85,11 +85,6 @@ section.bg-light {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(139, 0, 0, 0.3) !important;
-}
-
 .card-title {
     color: var(--dark-red);
     font-weight: bold;

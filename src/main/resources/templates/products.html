@@ -6,41 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .page-hero {
-            background: #ffffff;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .filter-card,
-        .products-card {
-            border: none;
-            border-radius: 14px;
-        }
-
-        .table tbody tr {
-            transition: background-color 0.2s ease-in-out;
-        }
-
-        .table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        .badge {
-            font-size: 0.8rem;
-            padding: 0.5em 0.75em;
-            border-radius: 999px;
-        }
-
-        .btn-sm {
-            border-radius: 8px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -52,7 +18,7 @@
     <!-- Page Header -->
     <section class="page-hero py-5 mb-4">
         <div class="container">
-            <h1 class="fw-bold mb-2">Products</h1>
+            <h1 class="fw-bold mb-2 display-5">Products</h1>
             <p class="text-muted mb-0">
                 Browse available items, explore listings, and manage marketplace products.
             </p>
@@ -62,20 +28,21 @@
     <div class="container pb-5">
 
         <!-- Search / Filter Card -->
-        <div class="card shadow-sm filter-card mb-4">
+        <div class="card shadow-sm mb-4">
             <div class="card-body p-4">
                 <h5 class="card-title mb-3">Search and Filter</h5>
 
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label">Search</label>
-                        <input type="text" class="form-control" placeholder="Search products...">
+                        <label class="form-label text-muted">Search</label>
+                        <input type="text" class="form-control" placeholder="Search products..."
+                               style="background-color: #1a1a1a; border-color: #8B0000; color: #cccccc;">
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label">Category</label>
-                        <select class="form-select">
-                            <option selected>All Categories</option>
+                        <label class="form-label text-muted">Category</label>
+                        <select class="form-select" style="background-color: #1a1a1a; border-color: #8B0000; color: #cccccc;">
+                            <option>All Categories</option>
                             <option>Electronics</option>
                             <option>Clothing</option>
                             <option>Home</option>
@@ -84,9 +51,9 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label class="form-label">Sort By</label>
-                        <select class="form-select">
-                            <option selected>Name</option>
+                        <label class="form-label text-muted">Sort By</label>
+                        <select class="form-select" style="background-color: #1a1a1a; border-color: #8B0000; color: #cccccc;">
+                            <option>Name</option>
                             <option>Price</option>
                             <option>Newest</option>
                             <option>Oldest</option>
@@ -101,76 +68,91 @@
         </div>
 
         <!-- Product List Card -->
-        <div class="card shadow-sm products-card">
+        <div class="card shadow-sm">
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="card-title mb-0">Product Listings</h5>
-                    <span class="text-muted">Showing 3 products</span>
+                    <span class="text-muted">Showing <span th:text="${productPage.totalElements}">0</span> products</span>
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle mb-0">
-                        <thead class="table-light">
+                    <table class="table table-hover align-middle mb-0"
+                           style="color: var(--text-gray); border-color: var(--medium-gray);">
+                        <thead style="background-color: var(--dark-gray); color: var(--dark-red);">
                             <tr>
                                 <th>Name</th>
                                 <th>Category</th>
+                                <th>Brand</th>
                                 <th>Price</th>
-                                <th>Year</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <td>Wireless Headphones</td>
+                            <tr th:each="p : ${productPage.content}"
+                                style="border-color: var(--medium-gray);"
+                                onmouseover="this.style.backgroundColor='#2d2d2d'"
+                                onmouseout="this.style.backgroundColor=''">
+                                <td th:text="${p.name}"></td>
+                                <td th:text="${p.category.name}"></td>
+                                <td th:text="${p.brand.name}"></td>
+                                <td th:text="'$' + ${p.price}"></td>
                                 <td>
-                                    <span class="badge text-bg-primary">Electronics</span>
-                                </td>
-                                <td>$199</td>
-                                <td>2025</td>
-                                <td>
-                                    <span class="badge text-bg-success">Available</span>
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Modern Lamp</td>
-                                <td>
-                                    <span class="badge text-bg-secondary">Home</span>
-                                </td>
-                                <td>$49</td>
-                                <td>2024</td>
-                                <td>
-                                    <span class="badge text-bg-success">Available</span>
+                                    <span class="badge"
+                                          th:classappend="${p.isAvailable} ? 'text-bg-success' : 'text-bg-danger'"
+                                          th:text="${p.isAvailable} ? 'Available' : 'Unavailable'">
+                                    </span>
                                 </td>
                                 <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>Winter Jacket</td>
-                                <td>
-                                    <span class="badge text-bg-dark">Clothing</span>
-                                </td>
-                                <td>$120</td>
-                                <td>2025</td>
-                                <td>
-                                    <span class="badge text-bg-warning">Low Stock</span>
-                                </td>
-                                <td>
-                                    <a href="#" class="btn btn-sm btn-outline-primary">View</a>
+                                    <a href="#" class="btn btn-sm btn-primary">View</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-               
+                <!-- Pagination -->
+                <nav class="mt-4">
+                    <ul class="pagination" style="--bs-pagination-color: var(--dark-red);
+                                                  --bs-pagination-bg: var(--dark-gray);
+                                                  --bs-pagination-border-color: var(--medium-gray);
+                                                  --bs-pagination-hover-color: white;
+                                                  --bs-pagination-hover-bg: var(--dark-red);
+                                                  --bs-pagination-active-bg: var(--dark-red);
+                                                  --bs-pagination-active-border-color: var(--dark-red);
+                                                  --bs-pagination-disabled-bg: var(--dark-gray);
+                                                  --bs-pagination-disabled-color: #555;">
+
+                        <li class="page-item" th:classappend="${productPage.first} ? 'disabled'">
+                            <a class="page-link" th:if="${!productPage.first}"
+                               th:href="@{/products(page=${productPage.number - 1}, sortBy=${sortBy}, direction=${direction})}">
+                                Previous
+                            </a>
+                            <a class="page-link" th:if="${productPage.first}" href="#" tabindex="-1" aria-disabled="true">
+                                Previous
+                            </a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
+                            th:classappend="${i == productPage.number} ? 'active'">
+                            <a class="page-link" th:text="${i + 1}"
+                               th:href="@{/products(page=${i}, sortBy=${sortBy}, direction=${direction})}"></a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${productPage.last} ? 'disabled'">
+                            <a class="page-link" th:if="${!productPage.last}"
+                               th:href="@{/products(page=${productPage.number + 1}, sortBy=${sortBy}, direction=${direction})}">
+                                Next
+                            </a>
+                            <a class="page-link" th:if="${productPage.last}" href="#" tabindex="-1" aria-disabled="true">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
 
             </div>
         </div>
@@ -178,64 +160,6 @@
     </div>
 </main>
 
-        <div class="col-12">
-            <button class="btn btn-secondary">Apply Filters</button>
-        </div>
-    </form>
-
-    <table class="table table-bordered">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Brand</th>
-            <th>Price</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        <tr th:each="p : ${productPage.content}">
-            <td th:text="${p.name}"></td>
-            <td th:text="${p.category.name}"></td>
-            <td th:text="${p.brand.name}"></td>
-            <td th:text="${p.price}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-    <nav>
-        <ul class="pagination">
-
-            <li class="page-item" th:classappend="${productPage.first} ? 'disabled'">
-                <a class="page-link" th:if="${!productPage.first}"
-                   th:href="@{/products(page=${productPage.number - 1}, categoryId=${selectedCategoryId}, brandId=${selectedBrandId}, sortBy=${sortBy}, direction=${direction})}">
-                    Previous
-                </a>
-                <a class="page-link" th:if="${productPage.first}" href="#" tabindex="-1" aria-disabled="true">
-                    Previous
-                </a>
-            </li>
-
-            <li class="page-item" th:each="i : ${#numbers.sequence(0, productPage.totalPages - 1)}"
-                th:classappend="${i == productPage.number} ? 'active'">
-                <a class="page-link" th:text="${i + 1}"
-                   th:href="@{/products(page=${i}, categoryId=${selectedCategoryId}, brandId=${selectedBrandId}, sortBy=${sortBy}, direction=${direction})}"></a>
-            </li>
-
-            <li class="page-item" th:classappend="${productPage.last} ? 'disabled'">
-                <a class="page-link" th:if="${!productPage.last}"
-                   th:href="@{/products(page=${productPage.number + 1}, categoryId=${selectedCategoryId}, brandId=${selectedBrandId}, sortBy=${sortBy}, direction=${direction})}">
-                    Next
-                </a>
-                <a class="page-link" th:if="${productPage.last}" href="#" tabindex="-1" aria-disabled="true">
-                    Next
-                </a>
-            </li>
-
-        </ul>
-    </nav>
-
-</div>
 <div th:replace="fragments/footer :: footer"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

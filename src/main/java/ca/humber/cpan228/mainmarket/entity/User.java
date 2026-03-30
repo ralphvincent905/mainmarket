@@ -45,9 +45,13 @@ public class User implements UserDetails {
     @NotNull
     private Role role;
 
+    @Builder.Default
     private Boolean isEnabled = true;
+    @Builder.Default
     private Boolean isAccountNonLocked = true;
+    @Builder.Default
     private Boolean isAccountNonExpired = true;
+    @Builder.Default
     private Boolean isCredentialsNonExpired = true;
 
     @Override

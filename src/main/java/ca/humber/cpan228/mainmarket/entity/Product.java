@@ -39,7 +39,9 @@ public class Product {
     private String color;
     private String size;
 
+    @Builder.Default
     private Boolean isAvailable = true;
+    @Builder.Default
     private Boolean isFeatured = false;
 
     @ManyToOne
